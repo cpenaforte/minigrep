@@ -9,6 +9,7 @@ Run `cargo run -- query file_path`
 Where:
 - **query**: The substring to be searched.
 - **file_path**: The path to the text file.
+
 _Note that there is an example file named poem.txt_
 
 ### Case-insensitive search
