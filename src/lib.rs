@@ -1,10 +1,4 @@
-use std::env;
-use std::fs;
-use std::io;
-
-pub fn receive_args() -> Vec<String> {
-    env::args().collect::<Vec<String>>()
-}
+use std::{fs, io};
 
 #[derive(Debug)]
 pub struct Config {
@@ -14,14 +8,23 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Self, &'static str> {
-        if args.len() < 3 {
-            return Err("Query and/or File path not given");
-        }
+    pub fn build(
+        mut args: impl Iterator<Item = String>,
+        ignore_case: bool,
+    ) -> Result<Self, &'static str> {
+        args.next();
 
-        let query = args[1].clone();
-        let file_path = args[2].clone();
-        let ignore_case = env::var("IGNORE_CASE").is_ok();
+        let query = match args.next() {
+            Some(query_str) => query_str,
+            None => return Err("Query not given"),
+        };
+
+        let file_path = match args.next() {
+            Some(file_path_str) => file_path_str,
+            None => return Err("File path not given"),
+        };
+
+        let ignore_case = ignore_case;
 
         Ok(Self {
             query,
